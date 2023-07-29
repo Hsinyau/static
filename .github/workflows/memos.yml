@@ -3,7 +3,7 @@ name: Daily API Data Backup
 on:
   schedule:
     # 每天 UTC 时间 00:00 执行
-    - cron: '28 10 * * *'
+    - cron: '30 10 * * *'
 
 jobs:
   backup:
