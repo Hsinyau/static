@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPEN_ID: ${{ secrets.OPEN_ID }}
+      GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,10 +29,13 @@ jobs:
       - name: Build
         run: node index.js
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          ACCESS_TOKEN: ${{ secrets.GHP_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: dist # The folder the action should deploy.
-          CLEAN: true # Automatically remove deleted files from the deploy branch
+          commit_message: 'Daily API data update'
+          commit_options: '--author "GitHub Actions <actions@github.com>"'
+          commit_files: |
+            data.json
+          commit_user_name: GitHub Actions
+          commit_user_email: actions@github.com
+
