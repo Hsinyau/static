@@ -1,4 +1,4 @@
-name: 'Sina News Feed Bot'
+name: 'Memos Backup Bot'
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
       - name: Build
         run: node index.js
         env:
-          OPEN_ID: {{ secrets.OPEN_ID }}
+          OPEN_ID: ${{ secrets.OPEN_ID }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.7.1
