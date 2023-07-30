@@ -1,31 +1,38 @@
-name: 'Daily API Backup'
+name: 'Sina News Feed Bot'
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-   - cron: '30 10 * * *'
+    - cron: '0 0,12 * * *'
 
 jobs:
-  backup:
+  fetch_data:
+    name: fetch data
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@main
         with:
-          persist-credentials: false  
+          node-version: '14'
 
-      - name: Get API data
-        run: |
-          curl -o data.json https://memos.hsinyau.cc/api/v1/memo?openId=${{ secrets.OPEN_ID }}
+      - name: Install dependencies
+        run: npm install axios
 
-      - name: Commit changes 
-        run: |
-          git config --local user.email "github-actions@example.com"
-          git config --local user.name "GitHub Actions"  
-          git add data.json
-          git commit -m "Daily backup"
+      - name: Build
+        run: node index.js
+        env:
+          OPEN_ID: {{ secrets.OPEN_ID }}
 
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.GHP_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: dist # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
+        - 
