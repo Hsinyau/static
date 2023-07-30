@@ -1,27 +1,31 @@
-name: Daily API Data Backup
+name: 'Daily API Backup'
 
 on:
   schedule:
-    # 每天 UTC 时间 00:00 执行
-    - cron: '30 10 * * *'
+   - cron: '30 10 * * *'
 
 jobs:
   backup:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false  
+
       - name: Get API data
         run: |
           curl -o data.json https://memos.hsinyau.cc/api/v1/memo?openId=${{ secrets.OPEN_ID }}
 
-      - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit changes 
+        run: |
+          git config --local user.email "github-actions@example.com"
+          git config --local user.name "GitHub Actions"  
+          git add data.json
+          git commit -m "Daily backup"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          commit_message: 'Daily backup'
-          commit_options: '--author "GitHub Actions <actions@github.com>"'
-          commit_files: |
-            data.json
-          commit_user_name: GitHub Actions
-          commit_user_email: actions@github.com
-        env:
-          GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
