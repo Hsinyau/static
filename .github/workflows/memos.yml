@@ -11,9 +11,6 @@ jobs:
   fetch_data:
     name: fetch data
     runs-on: ubuntu-latest
-    env:
-      OPEN_ID: ${{ secrets.OPEN_ID }}
-      GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,6 +25,8 @@ jobs:
 
       - name: Build
         run: node index.js
+        env:
+          OPEN_ID: ${{ secrets.OPEN_ID }}
 
       - name: Add data to repository
         run: |
@@ -36,4 +35,6 @@ jobs:
           git add data.json
           git commit -m "update data"
           git push
+        env:  
+          GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
 
