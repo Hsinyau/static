@@ -28,13 +28,15 @@ jobs:
         env:
           OPEN_ID: ${{ secrets.OPEN_ID }}
 
-      - name: Add data to repository
+      - name: commit
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add data.json
-          git commit -m "update data"
-          git push
-        env:  
-          GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
+          git config --global user.email $mail
+          git config --global user.name $username
+          git add .
+          git commit -m "update" -a
+        
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GHP_TOKEN }}
 
