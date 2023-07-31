@@ -30,8 +30,8 @@ jobs:
 
       - name: commit
         run: |
-          git config --global user.email `${{ AC_MAIL }}`
-          git config --global user.name `${{ AC_USER }}`
+          git config --global user.email `${{ secrets.AC_MAIL }}`
+          git config --global user.name `${{ secrets.AC_USER }}`
           git add .
           git commit -m "update" -a
         
