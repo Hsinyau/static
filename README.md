@@ -1,3 +1,3 @@
 # static
 
-static file
+static file.
